@@ -26,17 +26,11 @@ export const metadata: Metadata = {
     "Texas A&M",
     "Portfolio",
   ],
-  icons: {
-    icon: "/icon.png",
-    shortcut: "/icon.png",
-    apple: "/icon.png",
-  },
   openGraph: {
     title: "Akash Pillai — Data Scientist & AI Engineer",
     description:
       "Building intelligent systems at the edge of AI and software engineering.",
     type: "website",
-    images: [{ url: "/icon.png" }],
   },
 };
 
