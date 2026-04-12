@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+/* Impact system font overrides — applied before Tailwind so they cascade correctly */
+:root {
+  --font-space-grotesk: Impact, "Arial Narrow", Arial, sans-serif;
+  --font-inter: Impact, "Arial Narrow", Arial, sans-serif;
+}
+
+@theme {
+  /* Dark grey + blue palette */
+  --color-bg: #0f1117;
+  --color-surface: #161b27;
+  --color-surface-2: #1e2438;
+  --color-border: #252d3d;
+  --color-text-primary: #e4e8f0;
+  --color-text-secondary: #7a8599;
+
+  /* Fluorescent / electric blue accents */
+  --color-accent-1: #00b4ff;
+  --color-accent-2: #2979ff;
+  --color-accent-3: #1a56db;
+  --color-accent-4: #00e5ff;
+  --color-accent-5: #5c6bc0;
+
+  --font-heading: Impact, "Arial Narrow", Arial, sans-serif;
+  --font-body: Impact, "Arial Narrow", Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis handles this */
+}
+
+body {
+  background-color: #0f1117;
+  color: #e4e8f0;
+  font-family: Impact, "Arial Narrow", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Subtle noise overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.3;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #0f1117;
+}
+::-webkit-scrollbar-thumb {
+  background: #00b4ff;
+  border-radius: 2px;
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 180, 255, 0.2);
+  color: #e4e8f0;
+}
+
+/* Glass card utility */
+.glass {
+  background: rgba(22, 27, 39, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(37, 45, 61, 0.9);
+}
+
+/* Blue gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #00e5ff, #00b4ff, #2979ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow utilities */
+.glow-accent {
+  box-shadow: 0 0 20px rgba(0, 180, 255, 0.3), 0 0 60px rgba(0, 180, 255, 0.1);
+}
+
+.text-glow {
+  text-shadow: 0 0 20px rgba(0, 180, 255, 0.5);
+}
+
+/* All sections sit above the fixed katana canvas (z-index: 0).
+   Uniform semi-transparent background lets the katana glow through as a
+   watermark on every section including the hero.
+   Hero text has z-index: 10 inline so it always reads on top. */
+section {
+  position: relative;
+  z-index: 5;
+  background-color: rgba(15, 17, 23, 0.88);
+}
+
+/* Section max-width + padding — single source of truth */
+.section-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
+}
+
+.section-block {
+  padding: clamp(5rem, 8vw, 7rem) 0;
+}
+
+/* Section header row shared style */
+.section-heading-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 4rem;
+}
+
+/* Button base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-family: var(--font-space-grotesk);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  /* Required so the Ripple child span clips correctly */
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2979ff, #00b4ff);
+  color: #fff;
+  border: none;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 28px rgba(0, 180, 255, 0.45);
+}
+
+.btn-outline {
+  background: rgba(0, 180, 255, 0.05);
+  color: #00b4ff;
+  border: 1px solid rgba(0, 180, 255, 0.35);
+}
+
+.btn-outline:hover {
+  background: rgba(0, 180, 255, 0.12);
+  border-color: rgba(0, 180, 255, 0.6);
+}
+
+/* ── Button ripple ───────────────────────────────────────────────────────────── */
+@keyframes btn-ripple {
+  0%   { transform: scale(0); opacity: 0.38; }
+  70%  { opacity: 0.15; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+
+/* Animation keyframes */
+@keyframes pulseRing {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 180, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(0, 180, 255, 0);
+  }
+}
+
+@keyframes gleam {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
