@@ -26,8 +26,8 @@ export default function CursorRipple() {
 
     const tick = () => {
       // Outer glow trails more lazily; inner follows tighter
-      current.x = lerp(current.x, target.x, 0.10); // eslint-disable-line
-      current.y = lerp(current.y, target.y, 0.10); // eslint-disable-line
+      current.x = lerp(current.x, target.x, 0.10);
+      current.y = lerp(current.y, target.y, 0.10);
 
       if (outerRef.current) {
         outerRef.current.style.transform =
