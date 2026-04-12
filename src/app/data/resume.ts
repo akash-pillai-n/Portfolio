@@ -122,6 +122,7 @@ export const projects: ProjectItem[] = [
     tech: ["MCP", "LLMs", "ElevenLabs", "D-ID", "OpenRouter", "Reddit API"],
     color: "#00b4ff",
     image: "/images/curatex.jpg",
+    link: "https://github.com/akash-pillai-n/Content-Idea",
   },
   {
     id: 2,
@@ -132,7 +133,8 @@ export const projects: ProjectItem[] = [
       "Transforms weather charts into video summaries using Llama 3.2 Vision, Llama 3.1 70B, Deepgram AI, Wav2Lip, and AWS/Cloudflare.",
     tech: ["Llama 3.2", "Deepgram", "Wav2Lip", "AWS S3", "AWS Bedrock"],
     color: "#2979ff",
-  image: "/images/nimbusnews.jpg",
+    image: "/images/nimbusnews.jpg",
+    link: "https://github.com/akash-pillai-n/WeatherMan",
   },
   {
     id: 3,
@@ -144,6 +146,7 @@ export const projects: ProjectItem[] = [
     tech: ["AWS Bedrock", "Claude Sonnet", "Gmail API", "Google Calendar", "AI Agents"],
     color: "#1a56db",
     image: "/images/phoenix.jpg",
+    link: "https://github.com/akash-pillai-n/Phoenix",
   },
   {
     id: 4,
@@ -155,6 +158,7 @@ export const projects: ProjectItem[] = [
     tech: ["Streamlit", "Groq", "AWS", "Deepgram", "Notion API"],
     color: "#00e5ff",
     image: "/images/drquick.jpg",
+    link: "https://github.com/akash-pillai-n/Responder",
   },
   {
     id: 5,
@@ -177,6 +181,7 @@ export const projects: ProjectItem[] = [
     tech: ["Python", "Dlib", "CNN", "OpenCV", "Face Recognition"],
     color: "#0077cc",
     image: "/images/faceattend.jpg",
+    link: "https://github.com/akash-pillai-n/AI-face-recog-and-attend",
   },
 ];
 

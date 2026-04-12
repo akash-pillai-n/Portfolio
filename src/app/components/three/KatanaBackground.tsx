@@ -72,6 +72,7 @@ export default function KatanaBackground() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(max-width: 768px)").matches) return; // skip on mobile — too heavy
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -153,6 +154,7 @@ export default function KatanaBackground() {
         pointerEvents: "none",
         zIndex:  0,
         opacity: 0.82,
+        display: typeof window !== "undefined" && window.innerWidth < 768 ? "none" : "block",
       }}
     >
       <Canvas

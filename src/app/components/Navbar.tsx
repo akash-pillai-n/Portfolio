@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useMotionValueEvent } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Github, Linkedin } from "lucide-react";
 import { personalInfo } from "@/app/data/resume";
 import Ripple from "@/app/components/ui/Ripple";
@@ -17,17 +17,64 @@ const navLinks = [
 
 export default function Navbar() {
   const { scrollY } = useScroll();
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled]     = useState(false);
+  const [menuOpen, setMenuOpen]     = useState(false);
+  const [activeLink, setActiveLink] = useState<string | null>(null);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 50);
   });
 
+  // Scroll spy — highlight nav link whose section is most visible in viewport
+  useEffect(() => {
+    const sectionIds = navLinks.map((l) => l.href.slice(1)); // strip "#"
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry with the highest intersection ratio that is intersecting
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible.length > 0) {
+          setActiveLink(`#${visible[0].target.id}`);
+        }
+      },
+      {
+        rootMargin: "-30% 0px -60% 0px", // trigger when section is in the middle band
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+      }
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    setMenuOpen(false);
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+    setActiveLink(href);
+
+    if (menuOpen) {
+      // Close the menu first, then scroll after the animation finishes (300ms)
+      setMenuOpen(false);
+      setTimeout(() => {
+        const target = document.querySelector(href) as HTMLElement | null;
+        if (target) {
+          const offset = target.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({ top: offset, behavior: "smooth" });
+        }
+      }, 320);
+    } else {
+      const target = document.querySelector(href) as HTMLElement | null;
+      if (target) {
+        const offset = target.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: offset, behavior: "smooth" });
+      }
+    }
   };
 
   return (
@@ -50,61 +97,74 @@ export default function Navbar() {
         {/* Logo */}
         <motion.a
           href="#"
-          className="font-bold text-xl"
-          whileHover={{ scale: 1.02 }}
-          style={{ fontFamily: "var(--font-space-grotesk)", textDecoration: "none" }}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
+          style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
         >
-          <span className="gradient-text">AP</span>
-          <span
-            style={{
-              color: "#e4e8f0",
-              marginLeft: "0.25rem",
-              fontSize: "0.8rem",
-              fontFamily: "var(--font-jetbrains-mono)",
-              opacity: 0.4,
-            }}
-          >
-            &lt;/&gt;
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Akash Pillai"
+            style={{ height: "2.25rem", width: "auto", display: "block" }}
+          />
         </motion.a>
 
         {/* Desktop nav */}
         <ul
           className="hidden md:flex items-center"
-          style={{ gap: "2.25rem", listStyle: "none" }}
+          style={{ gap: "0.25rem", listStyle: "none" }}
         >
-          {navLinks.map((link, i) => (
-            <motion.li
-              key={link.href}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.08 + i * 0.05, duration: 0.4 }}
-            >
-              <a
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className="relative group"
-                style={{
-                  fontFamily: "var(--font-space-grotesk)",
-                  fontSize: "0.875rem",
-                  color: "#7a8599",
-                  textDecoration: "none",
-                  transition: "color 0.2s",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#e4e8f0")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#7a8599")}
+          {navLinks.map((link, i) => {
+            const isActive = activeLink === link.href;
+            return (
+              <motion.li
+                key={link.href}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.08 + i * 0.05, duration: 0.4 }}
+                style={{ position: "relative" }}
               >
-                {link.label}
-                <span
-                  className="absolute -bottom-0.5 left-0 w-0 h-px group-hover:w-full"
+                {/* Sliding pill background */}
+                {isActive && (
+                  <motion.div
+                    layoutId="navbar-pill"
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      borderRadius: "0.5rem",
+                      background: "rgba(0,180,255,0.1)",
+                      border: "1px solid rgba(0,180,255,0.25)",
+                    }}
+                  />
+                )}
+                <a
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   style={{
-                    backgroundColor: "#00b4ff",
-                    transition: "width 0.3s ease",
+                    position: "relative",
+                    display: "block",
+                    padding: "0.375rem 0.875rem",
+                    fontFamily: "var(--font-space-grotesk)",
+                    fontSize: "0.875rem",
+                    color: isActive ? "#00b4ff" : "#7a8599",
+                    textDecoration: "none",
+                    borderRadius: "0.5rem",
+                    transition: "color 0.2s",
+                    zIndex: 1,
                   }}
-                />
-              </a>
-            </motion.li>
-          ))}
+                  onMouseEnter={(e) => {
+                    if (!isActive) e.currentTarget.style.color = "#e4e8f0";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) e.currentTarget.style.color = "#7a8599";
+                  }}
+                >
+                  {link.label}
+                </a>
+              </motion.li>
+            );
+          })}
         </ul>
 
         {/* Social icon links + CTA */}
@@ -201,25 +261,30 @@ export default function Navbar() {
           className="flex flex-col"
           style={{ padding: "1rem clamp(1.5rem, 5vw, 4rem) 1.5rem", gap: "1.25rem", listStyle: "none" }}
         >
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                style={{
-                  fontFamily: "var(--font-space-grotesk)",
-                  fontSize: "1rem",
-                  color: "#7a8599",
-                  textDecoration: "none",
-                  transition: "color 0.2s",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#00b4ff")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#7a8599")}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = activeLink === link.href;
+            return (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  style={{
+                    fontFamily: "var(--font-space-grotesk)",
+                    fontSize: "1rem",
+                    color: isActive ? "#00b4ff" : "#7a8599",
+                    textDecoration: "none",
+                    transition: "color 0.2s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#00b4ff")}
+                  onMouseLeave={(e) => {
+                    if (!isActive) e.currentTarget.style.color = "#7a8599";
+                  }}
+                >
+                  {link.label}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </motion.div>
     </motion.header>

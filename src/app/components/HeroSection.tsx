@@ -37,6 +37,14 @@ function shuffle<T>(arr: T[]): T[] {
 
 export default function HeroSection() {
   const [blockOrder, setBlockOrder] = useState(skillBlocks);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -183,6 +191,7 @@ export default function HeroSection() {
               flexWrap: "wrap",
               gap: "1rem",
               justifyContent: "center",
+              width: "100%",
             }}
             className="lg:justify-start"
           >
@@ -272,12 +281,12 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* Right: animated reordering blocks with Lucide icons */}
+        {/* Right: animated reordering blocks — hidden on mobile */}
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          style={{ flexShrink: 0 }}
+          style={{ flexShrink: 0, display: isMobile ? "none" : "block" }}
         >
           <ul
             style={{

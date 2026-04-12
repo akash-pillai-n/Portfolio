@@ -12,6 +12,8 @@ export default function CursorRipple() {
   const innerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Don't render on touch devices — no cursor exists
+    if (window.matchMedia("(hover: none)").matches) return;
     const target  = { x: -300, y: -300 };
     const current = { x: -300, y: -300 };
     let rafId: number;
