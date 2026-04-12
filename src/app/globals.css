@@ -218,6 +218,28 @@ section {
   }
 }
 
+/* ── Experience timeline responsive helpers ──────────────────────────────────── */
+.timeline-line,
+.timeline-dot {
+  display: none;
+}
+@media (min-width: 768px) {
+  .timeline-line,
+  .timeline-dot {
+    display: block;
+  }
+}
+.timeline-card {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .timeline-card {
+    width: 46%;
+  }
+  .timeline-card-left  { margin-right: auto; }
+  .timeline-card-right { margin-left: auto; }
+}
+
 /* ── Mobile overrides ────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .section-block {

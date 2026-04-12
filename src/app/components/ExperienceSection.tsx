@@ -59,7 +59,7 @@ export default function ExperienceSection() {
         <div style={{ position: "relative" }}>
           {/* Vertical progress line — desktop only */}
           <div
-            className="hidden md:block"
+            className="timeline-line"
             style={{
               position: "absolute",
               left: "50%",
@@ -92,7 +92,7 @@ export default function ExperienceSection() {
                     whileInView={{ scale: 1, opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ type: "spring", damping: 15, delay: 0.1 }}
-                    className="hidden md:block"
+                    className="timeline-dot"
                     style={{
                       position: "absolute",
                       left: "50%",
@@ -115,10 +115,7 @@ export default function ExperienceSection() {
 
                   {/* Card */}
                   <div
-                    style={{
-                      width: "100%",
-                    }}
-                    className={`md:w-[46%] ${isLeft ? "md:mr-auto" : "md:ml-auto"}`}
+                    className={`timeline-card ${isLeft ? "timeline-card-left" : "timeline-card-right"}`}
                   >
                     <motion.div
                       initial={{ opacity: 0, x: isLeft ? -36 : 36, y: 8 }}
